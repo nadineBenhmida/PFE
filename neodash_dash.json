@@ -1,0 +1,374 @@
+{
+  "title": "",
+  "version": "2.3",
+  "settings": {
+    "pagenumber": 0,
+    "editable": true,
+    "fullscreenEnabled": false,
+    "parameters": {
+      "neodash_structure_type": "service",
+      "neodash_structure_type_display": "service",
+      "neodash_structure_nom": "Service Marketing",
+      "neodash_structure_nom_display": "Service Marketing",
+      "neodash_intervalle_de_temps": {
+        "year": 2023,
+        "month": 1,
+        "day": 1
+      },
+      "neodash_date": {
+        "year": 2023,
+        "month": 2,
+        "day": 1
+      },
+      "neodash_collaborateur_nom": "Yosra",
+      "neodash_collaborateur_nom_display": "Yosra",
+      "neodash_collaborateur_prenom": "Menif",
+      "neodash_collaborateur_prenom_display": "Menif",
+      "neodash_heure": "",
+      "neodash_heure_display": ""
+    },
+    "queryTimeLimit": 1000
+  },
+  "pages": [
+    {
+      "title": "Main Page",
+      "reports": [
+        {
+          "id": "6c24a2f4-4bf5-4b67-9673-1ae6607adcd3",
+          "title": "Nombre de publication par semaine(filtrer par structure)",
+          "query": "MATCH (e:Structure {type: 'equipe'})-[:HAS_EMPLOYEE]->(c:Collaborateur)\nOPTIONAL MATCH (e)<-[:HAS_EQUIPE]-(s:Structure {type: 'service'})<-[:HAS_SERVICE]-(d:Structure {type: 'direction'})\nOPTIONAL MATCH (c)<-[:A_CREE_PAR]-(p:Publication)\nWITH p, c, date(p.date_creation) AS dateCreation, d, s, e\nWHERE dateCreation >= date($neodash_intervalle_de_temps) AND dateCreation <= date($neodash_date)\n  AND ($neodash_structure_type IS NULL OR\n       ($neodash_structure_type = 'direction' AND d.nom = $neodash_structure_nom) OR\n       ($neodash_structure_type = 'service' AND s.nom = $neodash_structure_nom) OR\n       ($neodash_structure_type = 'equipe' AND e.nom = $neodash_structure_nom))\nWITH dateCreation, c, duration.between(date($neodash_intervalle_de_temps), dateCreation).weeks as weeks\nRETURN date($neodash_intervalle_de_temps) + duration({weeks: weeks}) as debutSemaine,\n       date($neodash_intervalle_de_temps) + duration({weeks: weeks + 1}) - duration({days: 1}) as finSemaine,\n       count(*) AS count\nORDER BY debutSemaine\n\n\n",
+          "width": 6,
+          "height": 2,
+          "x": 0,
+          "y": 1,
+          "type": "line",
+          "selection": {
+            "x": "debutSemaine",
+            "value": [
+              "count"
+            ]
+          },
+          "settings": {
+            "backgroundColor": "#F8FAFC",
+            "colors": "category10"
+          }
+        },
+        {
+          "id": "14f887b6-4c2a-4dc0-a47a-249ac07397c3",
+          "title": "Date Début",
+          "query": "RETURN true;",
+          "width": 2,
+          "height": 1,
+          "x": 0,
+          "y": 0,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Date Picker",
+            "entityType": "intervalle_de_temps",
+            "parameterName": "neodash_intervalle_de_temps",
+            "backgroundColor": "#F8FAFC"
+          }
+        },
+        {
+          "id": "fa02bd4a-d8ad-4a91-8118-c8d22903cd00",
+          "title": "Date fin",
+          "query": "RETURN true;",
+          "width": 2,
+          "height": 1,
+          "x": 2,
+          "y": 0,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Date Picker",
+            "entityType": "date",
+            "parameterName": "neodash_date",
+            "backgroundColor": "#F8FAFC"
+          },
+          "database": "neo4j"
+        },
+        {
+          "id": "fdff708d-3536-4123-a7b6-e03d3d1d6b64",
+          "title": "Structure",
+          "query": "MATCH (n:`Structure`) \nWHERE toLower(toString(n.`type`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`type` as value,  n.`type` as display ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 2,
+          "height": 1,
+          "x": 4,
+          "y": 0,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "Structure",
+            "propertyType": "type",
+            "propertyTypeDisplay": "type",
+            "parameterName": "neodash_structure_type",
+            "backgroundColor": "#F8FAFC"
+          }
+        },
+        {
+          "id": "70c5045b-862a-43a1-adfa-70e75a69abe1",
+          "title": "Nom de structure",
+          "query": "MATCH (n:`Structure`) \nWHERE toLower(toString(n.`nom`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`nom` as value,  n.`nom` as display ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 2,
+          "height": 1,
+          "x": 6,
+          "y": 0,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "Structure",
+            "propertyType": "nom",
+            "propertyTypeDisplay": "nom",
+            "parameterName": "neodash_structure_nom",
+            "backgroundColor": "#F8FAFC"
+          }
+        },
+        {
+          "id": "aab7c50f-6475-4566-8b69-ad280d553889",
+          "title": "Nombre de publication par semaine(filtrer par collaborateur)",
+          "query": "MATCH (p:Publication)-[:A_CREE_PAR]->(c:Collaborateur)\nWITH p, date(p.date_creation) AS dateCreation, c\nWHERE dateCreation >= date($neodash_intervalle_de_temps) AND dateCreation <= date($neodash_date)\n  AND c.nom = $neodash_collaborateur_nom\n  AND c.prenom = $neodash_collaborateur_prenom\nWITH dateCreation, c, duration.between(date($neodash_intervalle_de_temps), dateCreation).weeks as weeks\nRETURN date($neodash_intervalle_de_temps) + duration({weeks: weeks}) as debutSemaine,\n       date($neodash_intervalle_de_temps) + duration({weeks: weeks + 1}) - duration({days: 1}) as finSemaine,\n       count(*) AS count\nORDER BY debutSemaine\n\n\n",
+          "width": 6,
+          "height": 2,
+          "x": 6,
+          "y": 1,
+          "type": "line",
+          "selection": {
+            "x": "debutSemaine",
+            "value": [
+              "count"
+            ]
+          },
+          "settings": {
+            "backgroundColor": "#F8FAFC",
+            "colors": "category10"
+          }
+        },
+        {
+          "id": "b39d2767-64e3-4ca2-966f-cf801455f325",
+          "title": "Prénom de collaborateur ",
+          "query": "MATCH (n:`Collaborateur`) \nWHERE toLower(toString(n.`nom`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`nom` as value,  n.`nom` as display ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 2,
+          "height": 1,
+          "x": 8,
+          "y": 0,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "Collaborateur",
+            "propertyType": "nom",
+            "propertyTypeDisplay": "nom",
+            "parameterName": "neodash_collaborateur_nom",
+            "backgroundColor": "#F8FAFC"
+          }
+        },
+        {
+          "id": "de5a0c60-58fa-4e86-9c46-774675df7433",
+          "title": "Nom de Collaborateur",
+          "query": "MATCH (n:`Collaborateur`) \nWHERE toLower(toString(n.`prenom`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`prenom` as value,  n.`prenom` as display ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 2,
+          "height": 1,
+          "x": 10,
+          "y": 0,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "Collaborateur",
+            "propertyType": "prenom",
+            "propertyTypeDisplay": "prenom",
+            "parameterName": "neodash_collaborateur_prenom",
+            "backgroundColor": "#F8FAFC"
+          }
+        },
+        {
+          "id": "31982b19-928b-44dc-808e-1c3400892bb4",
+          "title": "Collaborateurs du plus grand nombre de publications",
+          "query": "MATCH (c:Collaborateur)\nOPTIONAL MATCH (c)<-[:A_CREE_PAR]-(p:Publication)\nWHERE ($neodash_structure_type IS NULL) OR\n      ($neodash_structure_type = 'equipe' AND EXISTS {MATCH (e:Structure {type: 'equipe', nom: $neodash_structure_nom})-[:HAS_EMPLOYEE]->(c)}) OR\n      ($neodash_structure_type = 'direction' AND EXISTS {MATCH (e:Structure {type: 'equipe'})-[:HAS_EMPLOYEE]->(c)<-[:A_CREE_PAR]-(p:Publication), (e)<-[:HAS_EQUIPE]-(s:Structure {type: 'service'})<-[:HAS_SERVICE]-(d:Structure {type: 'direction', nom: $neodash_structure_nom})}) OR\n      ($neodash_structure_type = 'service' AND EXISTS {MATCH (e:Structure {type: 'equipe'})-[:HAS_EMPLOYEE]->(c)<-[:A_CREE_PAR]-(p:Publication), (e)<-[:HAS_EQUIPE]-(s:Structure {type: 'service', nom: $neodash_structure_nom})})\n  AND date(p.date_creation) >= date($neodash_intervalle_de_temps) AND date(p.date_creation) <= date($neodash_date)\nWITH c, COUNT(p) AS nombre_publications\nRETURN c.prenom + ' ' + c.nom AS nom_collaborateur, nombre_publications\nORDER BY nombre_publications DESC\nLIMIT 10\n\n\n",
+          "width": 6,
+          "height": 2,
+          "x": 6,
+          "y": 9,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "backgroundColor": "#F8FAFC"
+          }
+        },
+        {
+          "id": "7727354e-9b48-4115-b5e1-0f5f2cf8318f",
+          "title": "Le nombre de news / nombre moyen de collaborateurs ",
+          "query": "MATCH (e:Structure {type: 'equipe'})-[:HAS_EMPLOYEE]->(c:Collaborateur)\nOPTIONAL MATCH (e)<-[:HAS_EQUIPE]-(s:Structure {type: 'service'})<-[:HAS_SERVICE]-(d:Structure {type: 'direction'})\nOPTIONAL MATCH (c)<-[:A_CREE_PAR]-(p:Publication)\n\nWHERE (e.type = $neodash_structure_type AND e.nom = $neodash_structure_nom)\n   OR (s.type = $neodash_structure_type AND s.nom = $neodash_structure_nom)\n   OR (d.type = $neodash_structure_type AND d.nom = $neodash_structure_nom)\n\nWITH c.prenom AS prenomCollaborateur, c.nom AS nomCollaborateur, count(c) AS totalNombreCollaborateurs, sum(duration.inDays(date(c.date_debut_contrat), date()).days) AS totalSommeJours\n\nMATCH (p:Publication)-[:A_CREE_PAR]->(c:Collaborateur)\nWITH date(p.date_creation) AS dateCreation, count(DISTINCT p) AS nombreNews, totalNombreCollaborateurs, totalSommeJours\nWHERE dateCreation >= date($neodash_intervalle_de_temps) AND dateCreation <= date($neodash_date)\n\nWITH dateCreation, nombreNews, totalNombreCollaborateurs, totalSommeJours, duration.between(date($neodash_intervalle_de_temps), dateCreation).weeks as weeks\n\nWITH date($neodash_intervalle_de_temps) + duration({weeks: weeks}) as debutSemaine,\n     date($neodash_intervalle_de_temps) + duration({weeks: weeks + 1}) - duration({days: 1}) as finSemaine,\n     sum(totalNombreCollaborateurs * totalSommeJours) / toFloat(sum(totalSommeJours)) AS nombreMoyenCollaborateurs\n\nMATCH (p:Publication)-[:A_CREE_PAR]->(c:Collaborateur)\nWITH date(p.date_creation) AS dateCreation, count(DISTINCT p) AS nombreNews, debutSemaine, finSemaine, nombreMoyenCollaborateurs\nWHERE dateCreation >= debutSemaine AND dateCreation <= finSemaine\n\nRETURN debutSemaine, finSemaine, nombreNews / toFloat(nombreMoyenCollaborateurs) AS ratioNewsCollaborateurs\nORDER BY debutSemaine",
+          "width": 12,
+          "height": 2,
+          "x": 0,
+          "y": 7,
+          "type": "bar",
+          "selection": {
+            "index": "debutSemaine",
+            "value": "ratioNewsCollaborateurs",
+            "key": "(none)"
+          },
+          "settings": {
+            "backgroundColor": "#F8FAFC",
+            "colors": "category10"
+          }
+        },
+        {
+          "id": "969196e9-8105-48f1-bb39-9186b69255cc",
+          "title": "Collaborateur de moins nombre de publications",
+          "query": "MATCH (c:Collaborateur)\nOPTIONAL MATCH (c)<-[:A_CREE_PAR]-(p:Publication)\nWHERE ($neodash_structure_type IS NULL) OR\n      ($neodash_structure_type = 'equipe' AND EXISTS {MATCH (e:Structure {type: 'equipe', nom: $neodash_structure_nom})-[:HAS_EMPLOYEE]->(c)}) OR\n      ($neodash_structure_type = 'direction' AND EXISTS {MATCH (e:Structure {type: 'equipe'})-[:HAS_EMPLOYEE]->(c)<-[:A_CREE_PAR]-(p:Publication), (e)<-[:HAS_EQUIPE]-(s:Structure {type: 'service'})<-[:HAS_SERVICE]-(d:Structure {type: 'direction', nom: $neodash_structure_nom})}) OR\n      ($neodash_structure_type = 'service' AND EXISTS {MATCH (e:Structure {type: 'equipe'})-[:HAS_EMPLOYEE]->(c)<-[:A_CREE_PAR]-(p:Publication), (e)<-[:HAS_EQUIPE]-(s:Structure {type: 'service', nom: $neodash_structure_nom})})\n  AND date(p.date_creation) >= date($neodash_intervalle_de_temps) AND date(p.date_creation) <= date($neodash_date)\nWITH c, COUNT(p) AS nombre_publications\nRETURN c.prenom + ' ' + c.nom AS nom_collaborateur, nombre_publications\nORDER BY nombre_publications ASC\nLIMIT 10\n\n\n",
+          "width": 6,
+          "height": 2,
+          "x": 0,
+          "y": 11,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "backgroundColor": "#F8FAFC"
+          }
+        },
+        {
+          "id": "16e2917c-9923-49da-9506-6a5cbaaf6cd6",
+          "title": "Les équipes qui comptent le plus de publications",
+          "query": "MATCH (e:Structure {type: 'equipe'})-[:HAS_EMPLOYEE]->(c:Collaborateur)\nOPTIONAL MATCH (e)<-[:HAS_EQUIPE]-(s:Structure {type: 'service'})<-[:HAS_SERVICE]-(d:Structure {type: 'direction'})\nOPTIONAL MATCH (c)<-[:A_CREE_PAR]-(p:Publication)\nWHERE ($neodash_structure_type IS NULL OR ($neodash_structure_type = 'direction' AND d.nom = $neodash_structure_nom) OR ($neodash_structure_type = 'service' AND s.nom = $neodash_structure_nom))\n  AND date(p.date_creation) >= date($neodash_intervalle_de_temps) AND date(p.date_creation) <= date($neodash_date)\nWITH e, COUNT(DISTINCT p) AS nombre_publications, COUNT(DISTINCT c) AS nombre_collaborateurs\nRETURN e.nom AS nom_equipe, nombre_publications, nombre_publications / toFloat(nombre_collaborateurs) AS nombre_publications_moyen_par_collaborateur\nORDER BY nombre_publications DESC\nLIMIT 5\n\n\n",
+          "width": 6,
+          "height": 2,
+          "x": 0,
+          "y": 9,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "backgroundColor": "#F8FAFC"
+          }
+        },
+        {
+          "id": "5e47821e-b99f-4380-85ea-b3b64cc790b5",
+          "title": "",
+          "query": "UNWIND range(0, 23) AS hour\nOPTIONAL MATCH (p:Publication)\nWHERE datetime({epochMillis: apoc.date.parse(p.heure, \"ms\", \"yyyy-MM-dd HH:mm:ss\")}).hour = hour \nAND date(p.date_creation) >= date($neodash_intervalle_de_temps)\nAND date(p.date_creation) <= date($neodash_date)\nWITH hour, count(p) AS NumberOfPublications\nRETURN \n  apoc.text.lpad(toString(hour), 2, \"0\") + \":00-\" + apoc.text.lpad(toString(hour), 2, \"0\") + \":59 \"  as Interval_Publications,NumberOfPublications\nORDER BY hour",
+          "width": 6,
+          "height": 2,
+          "x": 0,
+          "y": 15,
+          "type": "bar",
+          "selection": {
+            "index": "Interval_Publications",
+            "value": "NumberOfPublications",
+            "key": "(none)"
+          },
+          "settings": {}
+        },
+        {
+          "id": "7b55c306-9004-477e-9fc3-b39840138434",
+          "title": "",
+          "query": "UNWIND range(0, 23) AS hour\nOPTIONAL MATCH (p:Publication)\nWHERE datetime({epochMillis: apoc.date.parse(p.heure, \"ms\", \"yyyy-MM-dd HH:mm:ss\")}).hour = hour \nAND date(p.date_creation) >= date($neodash_intervalle_de_temps)\nAND date(p.date_creation) <= date($neodash_date)\nWITH hour, count(p) AS NumberOfPublications\nRETURN \n  apoc.text.lpad(toString(hour), 2, \"0\") + \":00-\" + apoc.text.lpad(toString(hour), 2, \"0\") + \":59 \" as Interval_Publications, NumberOfPublications\nORDER BY hour\n\n\n\n",
+          "width": 6,
+          "height": 2,
+          "x": 6,
+          "y": 13,
+          "type": "bar",
+          "selection": {
+            "index": "Interval_Publications",
+            "value": "NumberOfPublications",
+            "key": "(none)"
+          },
+          "settings": {}
+        },
+        {
+          "id": "5bc8f483-7b14-4e52-a8da-dd749268aa56",
+          "title": "",
+          "query": "MATCH (e:Structure {type: 'equipe'})-[:HAS_EMPLOYEE]->(c:Collaborateur)\nOPTIONAL MATCH (e)<-[:HAS_EQUIPE]-(s:Structure {type: 'service'})<-[:HAS_SERVICE]-(d:Structure {type: 'direction'})\nOPTIONAL MATCH (c)<-[:A_CREE_PAR]-(p:Publication)\nWHERE (e.type = $neodash_structure_type AND e.nom = $neodash_structure_nom)\n   OR (s.type = $neodash_structure_type AND s.nom = $neodash_structure_nom)\n   OR (d.type = $neodash_structure_type AND d.nom = $neodash_structure_nom)\nWITH count(DISTINCT c) AS totalNombreCollaborateurs\n\nUNWIND range(0, 23) AS hour\nOPTIONAL MATCH (p:Publication)\nWHERE datetime({epochMillis: apoc.date.parse(p.heure, \"ms\", \"yyyy-MM-dd HH:mm:ss\")}).hour = hour \n  AND date(p.date_creation) >= date($neodash_intervalle_de_temps)\n  AND date(p.date_creation) <= date($neodash_date)\nWITH hour, count(p) AS NumberOfPublications, totalNombreCollaborateurs\n\nRETURN apoc.text.lpad(toString(hour), 2, \"0\") + \":00-\" + apoc.text.lpad(toString(hour), 2, \"0\") + \":59\" as Interval_Publications,\n       NumberOfPublications / toFloat(totalNombreCollaborateurs) as Ratio_Publications_Collaborateurs\nORDER BY hour\n",
+          "width": 6,
+          "height": 2,
+          "x": 0,
+          "y": 17,
+          "type": "bar",
+          "selection": {
+            "index": "Interval_Publications",
+            "value": "Ratio_Publications_Collaborateurs",
+            "key": "(none)"
+          },
+          "settings": {}
+        },
+        {
+          "id": "663dba1a-f087-49b1-952c-d9e97b6275e4",
+          "title": "",
+          "query": "MATCH (e:Structure {type: 'equipe'})-[:HAS_EMPLOYEE]->(c:Collaborateur)\nOPTIONAL MATCH (e)<-[:HAS_EQUIPE]-(s:Structure {type: 'service'})<-[:HAS_SERVICE]-(d:Structure {type: 'direction'})\nOPTIONAL MATCH (c)<-[:A_CREE_PAR]-(p:Publication)\n\nWHERE ((e.type = $neodash_structure_type AND e.nom = $neodash_structure_nom)\n   OR (s.type = $neodash_structure_type AND s.nom = $neodash_structure_nom)\n   OR (d.type = $neodash_structure_type AND d.nom = $neodash_structure_nom))\n   AND (e.nom = $neodash_structure_nom)\n   AND (date(c.date_creation) >= date($neodash_intervalle_de_temps) AND date(c.date_creation) <= date($neodash_date))\n\nWITH count(DISTINCT c) AS totalNombreCollaborateurs,\n     duration.between(date($neodash_intervalle_de_temps), date($neodash_date)).days + 1 AS Days\n\nWITH totalNombreCollaborateurs, Days,\n     sum(totalNombreCollaborateurs ) / toFloat(Days) AS nombreMoyenCollaborateurs\n\nUNWIND range(0, 23) AS hour\n\nOPTIONAL MATCH (p:Publication)\nWHERE datetime({epochMillis: apoc.date.parse(p.heure, \"ms\", \"yyyy-MM-dd HH:mm:ss\")}).hour = hour \nAND date(p.date_creation) >= date($neodash_intervalle_de_temps)\nAND date(p.date_creation) <= date($neodash_date)\n\nWITH hour, count(p) AS NumberOfPublications, nombreMoyenCollaborateurs, totalNombreCollaborateurs,Days\n\nRETURN apoc.text.lpad(toString(hour), 2, \"0\") + \":00-\" + apoc.text.lpad(toString(hour), 2, \"0\") + \":59\" as Interval_Publications,\n  NumberOfPublications / toFloat(nombreMoyenCollaborateurs) / toFloat(Days)  as Ratio_Publications_Collaborateurs\nORDER BY Interval_Publications\n",
+          "width": 6,
+          "height": 2,
+          "x": 0,
+          "y": 13,
+          "type": "bar",
+          "selection": {
+            "index": "Interval_Publications",
+            "value": "Ratio_Publications_Collaborateurs",
+            "key": "(none)"
+          },
+          "settings": {}
+        },
+        {
+          "id": "aefed4b1-0661-4394-aa65-f3be719ed815",
+          "title": "",
+          "query": "UNWIND range(0, 23) AS hour\nOPTIONAL MATCH (c:Collaborateur)<-[:A_CREE_PAR]-(p:Publication)\nWHERE datetime({epochMillis: apoc.date.parse(p.heure, \"ms\", \"yyyy-MM-dd HH:mm:ss\")}).hour = hour \n  AND date(p.date_creation) >= date($neodash_intervalle_de_temps)\n  AND date(p.date_creation) <= date($neodash_date)\nWITH hour, count(DISTINCT c) AS NumberOfCollaborateurs\n\nRETURN \n  apoc.text.lpad(toString(hour), 2, \"0\") + \":00-\" + apoc.text.lpad(toString(hour), 2, \"0\") + \":59\" as Interval_Heure,\n  coalesce(NumberOfCollaborateurs, 0) AS NumberOfCollaborateurs\nORDER BY hour\n",
+          "width": 6,
+          "height": 2,
+          "x": 6,
+          "y": 11,
+          "type": "bar",
+          "selection": {
+            "index": "Interval_Heure",
+            "value": "NumberOfCollaborateurs",
+            "key": "(none)"
+          },
+          "settings": {}
+        },
+        {
+          "id": "91a6dfc1-8402-4665-841e-32f9e476a04f",
+          "title": "",
+          "query": "MATCH (c:Collaborateur)\nWHERE c.date_debut_contrat IS NOT NULL\nWITH date(c.date_debut_contrat) AS date, count(*) AS newCollaborators\nORDER BY date\nWITH date, newCollaborators\nORDER BY date ASC\nWITH date, COLLECT(newCollaborators) AS allNewCollaborators\nRETURN date, REDUCE(total = 0, collaborator IN allNewCollaborators | total + collaborator) AS cumulativeCollaborators\n",
+          "width": 6,
+          "height": 2,
+          "x": 6,
+          "y": 15,
+          "type": "line",
+          "selection": {
+            "x": "date",
+            "value": [
+              "cumulativeCollaborators"
+            ]
+          },
+          "settings": {}
+        },
+        {
+          "id": "52f4639a-69a8-4d66-a89e-de29817e3122",
+          "title": "",
+          "query": "MATCH (c:Collaborateur)\nRETURN count(c) AS totalCollaborateurs\n\n\n\n",
+          "width": 7,
+          "height": 2,
+          "x": 0,
+          "y": 3,
+          "type": "value",
+          "selection": {},
+          "settings": {}
+        }
+      ]
+    }
+  ],
+  "parameters": {},
+  "extensions": {
+    "active": true,
+    "activeReducers": [],
+    "advanced-charts": {
+      "active": true
+    },
+    "styling": {
+      "active": true
+    },
+    "actions": {
+      "active": true
+    }
+  }
+}

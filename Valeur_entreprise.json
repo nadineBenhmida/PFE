@@ -1,0 +1,18 @@
+[
+  {
+    "nom": "Innovation",
+    "points": 10
+  },
+  {
+    "nom": "Empathie",
+    "points": 20
+  },
+  {
+    "nom": "Responsabilité",
+    "points": 30
+  },
+  {
+    "nom": "Efficience",
+    "points": 40
+  }
+]

@@ -1,0 +1,216 @@
+[
+    {
+        "nom": "Agile4UX",
+        "type": "Entreprise",
+        "children": [
+            {
+                "nom": "Direction Generale",
+                "type": "Direction",
+                "children": [
+                    {
+                        "nom": "Service administratif",
+                        "type": "Service",
+                        "children": [
+                            {
+                                "nom": "Equipe Comptabilite",
+                                "type": "Equipe",
+                                "collaborateurs": []
+                            },
+                            {
+                                "nom": "Equipe Achats",
+                                "type": "Equipe",
+                                "collaborateurs": []
+                            }
+                        ]
+                    },
+                    {
+                        "nom": "Service commercial",
+                        "type": "Service",
+                        "children": [
+                            {
+                                "nom": "Equipe Ventes",
+                                "type": "Equipe",
+                                "collaborateurs": []
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "nom": "Direction de Developpement",
+                "type": "Direction",
+                "children": [
+                    {
+                        "nom": "Service de developpement logiciel",
+                        "type": "Service",
+                        "children": [
+                            {
+                                "nom": "Equipe Web",
+                                "type": "Equipe",
+                                "collaborateurs": []
+                            },
+                            {
+                                "nom": "Equipe Mobile",
+                                "type": "Equipe",
+                                "collaborateurs": []
+                            }
+                        ]
+                    },
+                    {
+                        "nom": "Service de developement materiel",
+                        "type": "Service",
+                        "children": [
+                            {
+                                "nom": "Equipe conception",
+                                "type": "Equipe",
+                                "collaborateurs": []
+                            },
+                            {
+                                "nom": "Equipe Test",
+                                "type": "Equipe",
+                                "collaborateurs": []
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "nom": "Direction Financiere",
+                "type": "Direction",
+                "children": [
+                    {
+                        "nom": "Service de comptabilite",
+                        "type": "Service",
+                        "children": [
+                            {
+                                "nom": "Equipe de comptabilite generale",
+                                "type": "Equipe",
+                                "collaborateurs": []
+                            },
+                            {
+                                "nom": "Equipe de comptabilite fournisseur",
+                                "type": "Equipe",
+                                "collaborateurs": []
+                            }
+                        ]
+                    },
+                    {
+                        "nom": "Service de tresorerie",
+                        "type": "Service",
+                        "children": [
+                            {
+                                "nom": "Equipe de gestionde tresorerie",
+                                "type": "Equipe",
+                                "collaborateurs": []
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "nom": "Direction Commerciale",
+                "type": "Direction",
+                "children": [
+                    {
+                        "nom": "Service de ventes",
+                        "type": "Service",
+                        "children": [
+                            {
+                                "nom": "Equipe de ventes nationales",
+                                "type": "Equipe",
+                                "collaborateurs": []
+                            },
+                            {
+                                "nom": "Equipe de ventes internationales",
+                                "type": "Equipe",
+                                "collaborateurs": []
+                            }
+                        ]
+                    },
+                    {
+                        "nom": "Service Marketing",
+                        "type": "Service",
+                        "children": [
+                            {
+                                "nom": "Equipe de marketing de produit",
+                                "type": "Equipe",
+                                "collaborateurs": []
+                            },
+                            {
+                                "nom": "Equipe de marketing digital",
+                                "type": "Equipe",
+                                "collaborateurs": []
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "nom": "Direction RH",
+                "type": "Direction",
+                "children": [
+                    {
+                        "nom": "Service de recrutement",
+                        "type": "Service",
+                        "children": [
+                            {
+                                "nom": "Equipe de recrutement des talents",
+                                "type": "Equipe",
+                                "collaborateurs": []
+                            },
+                            {
+                                "nom": "Equipe de developpement des competances ",
+                                "type": "Equipe",
+                                "collaborateurs": []
+                            }
+                        ]
+                    },
+                    {
+                        "nom": "Service de gestion des ressources humaines",
+                        "type": "Service",
+                        "children": [
+                            {
+                                "nom": "Equipe de gestion des avantages sociaux",
+                                "type": "Equipe",
+                                "collaborateurs": []
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "nom": "Direction de support",
+                "type": "Direction",
+                "children": [
+                    {
+                        "nom": "Service informatique",
+                        "type": "Service",
+                        "children": [
+                            {
+                                "nom": "Equipe de support technique",
+                                "type": "Equipe",
+                                "collaborateurs": []
+                            }
+                        ]
+                    },
+                    {
+                        "nom": "Service de logistique",
+                        "type": "Service",
+                        "children": [
+                            {
+                                "nom": "Equipe de planification de la chaine d'approvisionnement",
+                                "type": "Equipe",
+                                "collaborateurs": []
+                            },
+                            {
+                                "nom": "Equipe de gestion des entrepots",
+                                "type": "Equipe",
+                                "collaborateurs": []
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]
