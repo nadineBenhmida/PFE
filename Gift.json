@@ -1,42 +1,42 @@
 [
   {
-    "name": "Gift 1",
+    "nom": "Gift 1",
     "cost": 10
   },
   {
-    "name": "Gift 2",
+    "nom": "Gift 2",
     "cost": 20
   },
   {
-    "name": "Gift 3",
+    "nom": "Gift 3",
     "cost": 30
   },
   {
-    "name": "Gift 4",
+    "nom": "Gift 4",
     "cost": 40
   },
   {
-    "name": "Gift 5",
+    "nom": "Gift 5",
     "cost": 50
   },
   {
-    "name": "Gift 6",
+    "nom": "Gift 6",
     "cost": 60
   },
   {
-    "name": "Gift 7",
+    "nom": "Gift 7",
     "cost": 70
   },
   {
-    "name": "Gift 8",
+    "nom": "Gift 8",
     "cost": 80
   },
   {
-    "name": "Gift 9",
+    "nom": "Gift 9",
     "cost": 90
   },
   {
-    "name": "Gift 10",
+    "nom": "Gift 10",
     "cost": 100
   }
 ]
